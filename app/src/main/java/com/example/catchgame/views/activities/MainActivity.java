@@ -1,7 +1,9 @@
-package com.example.catchgame;
+package com.example.catchgame.views.activities;
 
 import android.os.Bundle;
 
+import com.example.catchgame.R;
+import com.example.catchgame.adapters.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;

@@ -1,34 +1,24 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory
+        app:title="@string/gameSettings_header">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+        <SeekBarPreference
+            android:defaultValue="50"
+            android:max="100"
+            app:key="musicVolume"
+            app:min="0"
+            app:showSeekBarValue="true"
+            app:title="@string/musicVolume_title" />
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <SeekBarPreference
+            android:defaultValue="50"
+            android:max="100"
+            app:key="effectsVolume"
+            app:min="0"
+            app:showSeekBarValue="true"
+            app:title="@string/effectsVolume_title" />
 
     </PreferenceCategory>
 

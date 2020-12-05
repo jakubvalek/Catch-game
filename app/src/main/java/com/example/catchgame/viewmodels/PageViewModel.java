@@ -1,4 +1,4 @@
-package com.example.catchgame;
+package com.example.catchgame.viewmodels;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

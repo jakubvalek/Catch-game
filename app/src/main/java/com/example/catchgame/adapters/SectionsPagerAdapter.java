@@ -1,4 +1,4 @@
-package com.example.catchgame;
+package com.example.catchgame.adapters;
 
 import android.content.Context;
 
@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.catchgame.R;
-import com.example.catchgame.SettingsFragment;
+import com.example.catchgame.views.fragments.MainFragment;
+import com.example.catchgame.views.fragments.ScoresFragment;
+import com.example.catchgame.views.fragments.SettingsFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -37,10 +39,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new SettingsFragment();//PlaceholderFragment.newInstance(0);
                 break;
             case 1:
-                fragment = ScoresFragment.newInstance();//PlaceholderFragment.newInstance(1);
+                fragment = MainFragment.newInstance();//PlaceholderFragment.newInstance(1);
                 break;
             case 2:
-                fragment = MainFragment.newInstance();
+                fragment = ScoresFragment.newInstance();
                 break;
         }
         // will never return null -> assert to calm down the IDE
