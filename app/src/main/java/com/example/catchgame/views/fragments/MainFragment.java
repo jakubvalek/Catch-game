@@ -1,16 +1,23 @@
 package com.example.catchgame.views.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.catchgame.R;
 import com.example.catchgame.views.activities.GameActivity;
+import com.example.catchgame.views.dialogs.HowToPlayDialog;
+import com.example.catchgame.views.dialogs.PlayDialog;
 
 public class MainFragment extends Fragment {
 
@@ -20,7 +27,7 @@ public class MainFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
-    TextView textView_play;
+    TextView textView_play, textView_howToPlay;
 
 
     public MainFragment() {
@@ -52,11 +59,21 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         textView_play = view.findViewById(R.id.play);
+        textView_howToPlay = view.findViewById(R.id.how_to_play);
         textView_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent playGame = new Intent(getActivity().getApplicationContext(), GameActivity.class);
-                startActivity(playGame);
+                //Intent playGame = new Intent(getActivity().getApplicationContext(), GameActivity.class);
+                //startActivity(playGame);
+                PlayDialog playDialog = new PlayDialog();
+                playDialog.show(getActivity().getSupportFragmentManager(), null);
+            }
+        });
+        textView_howToPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HowToPlayDialog howToPlayDialog = new HowToPlayDialog();
+                howToPlayDialog.show(getActivity().getSupportFragmentManager(), null);
             }
         });
         return view;

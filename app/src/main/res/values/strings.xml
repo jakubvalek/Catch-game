@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Catch game</string>
+    <!-- Shared preferences -->
+    <string name="sp_score_normal">sp_score_normal</string>
+    <string name="sp_score_hard">sp_score_hard</string>
+    <string name="sp_score_insane">sp_score_insane</string>
     <!-- Menu titles -->
     <string name="tab_text_settings">Settings</string>
     <string name="tab_text_menu">Main menu</string>
@@ -11,4 +15,12 @@
     <string name="effectsVolume_title">Sound effects volume</string>
     <string name="play">Play</string>
     <string name="catch_game">Catch game</string>
+    <string name="how_to_play">How to play</string>
+    <string name="text1_how_to_play">To play, you need to tap the play button in the main menu. After that you choose a difficulty and press play.</string>
+    <string name="text2_how_to_play">After you start the game, you will have to press left or right side of the screen to move the hat (your character).</string>
+    <string name="text3_how_to_play">The point of the game is to try and catch as many items as possible by letting them fall into the hat.</string>
+    <string name="text4_how_to_play">Be careful though, you need to avoid the bombs or you will lose!</string>
+    <string name="text5_how_to_play">Thank you for playing Catch game!\nHave fun!</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
 </resources>

@@ -7,8 +7,8 @@ import com.example.catchgame.other.SkinHolderSingleton;
 
 public class Bomb extends Entity {
 
-    public Bomb(double x, double y) {
-        super(x, y, SkinHolderSingleton.getHolder().getBombSkin().getWidth(), SkinHolderSingleton.getHolder().getBombSkin().getHeight(), 0, 30);
+    public Bomb(double x, double y, double velocityY) {
+        super(x, y, SkinHolderSingleton.getHolder().getBombSkin().getWidth(), SkinHolderSingleton.getHolder().getBombSkin().getHeight(), 0, velocityY);
     }
 
     @Override

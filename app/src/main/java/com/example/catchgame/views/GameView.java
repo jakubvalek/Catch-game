@@ -1,9 +1,13 @@
 package com.example.catchgame.views;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,41 +23,80 @@ import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
 
-    private Thread gameThread;
-    private volatile boolean isRunning;
     private static final int MAX_FPS = 60;
     private static final int MAX_FRAME_TIME = (int) (1000.0 / MAX_FPS);
-    private static final double HAT_GROUND_VALUE_Y = 1.3;
-    private static final int FONT_SIZE = 80;
-    private static final int GOOD_ITEM = 0;
-    private static final int BOMB = 1;
-    private static final int MAX_CHANCE = 100;
-    private static final int BOMB_CHANCE = 20;
-    private static final int[] decisions = new int[]{GOOD_ITEM, BOMB};
+    private final double HAT_GROUND_VALUE_Y = 1.3;
+    private final int FONT_SIZE = 80;
+    private final int GOOD_ITEM = 0;
+    private final int BOMB = 1;
+    private final int MAX_CHANCE = 100;
+    private final int[] DECISIONS = new int[]{GOOD_ITEM, BOMB};
 
+    // Game area fields
     private Paint paint;
+    private SurfaceHolder holder;
     private int screenX, screenY;
+    private Thread gameThread;
+    private volatile boolean isRunning;
+
+    // Entity holding fields
     private Player player;
     private List<GoodItem> goodItemList;
     private List<Bomb> bombsList;
-    private SurfaceHolder holder;
+
+    // Gameplay decision fields
     private Random random;
+    private int bombChance;
+    private int spawnTimerMs;
     private int score = 0;
     private long lastCalledRun = 0;
+    private double baseEntityVelocityY;
+    private boolean lost = false;
+    private GameViewListener gameViewListener;
 
 
-    public GameView(Context context, int screenX, int screenY) {
+    public GameView(Context context, int screenX, int screenY, String difficulty, GameViewListener listener) {
         super(context);
-        paint = new Paint();
-        paint.setTextSize(FONT_SIZE);
-        random = new Random();
+
+        if(listener == null){
+            try {
+                throw new Exception("To use this view implement GameView.GameViewListener!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        gameViewListener = listener;
         this.screenX = screenX;
         this.screenY = screenY;
+
+        random = new Random();
         holder = getHolder();
-        SkinHolderSingleton.getHolder().generateSkins(getResources(), screenX, screenY);
+        paint = new Paint();
         goodItemList = new ArrayList<>();
         bombsList = new ArrayList<>();
-        goodItemList.add(new GoodItem(100, 100));
+
+        switch (difficulty){
+            case "Insane":
+                bombChance = 70;
+                spawnTimerMs = 200;
+                baseEntityVelocityY = 70;
+                break;
+            case "Hard":
+                bombChance = 50;
+                spawnTimerMs = 500;
+                baseEntityVelocityY = 50;
+                break;
+            default:
+            case "Normal":
+                bombChance = 30;
+                spawnTimerMs = 1000;
+                baseEntityVelocityY = 40;
+                break;
+        }
+
+        paint.setTextSize(FONT_SIZE);
+        SkinHolderSingleton.getHolder().generateSkins(getResources(), screenX, screenY);
         player = new Player(getGameBackground().getWidth() / 2.5, getGameBackground().getHeight() / HAT_GROUND_VALUE_Y);
     }
 
@@ -119,13 +162,34 @@ public class GameView extends SurfaceView implements Runnable {
         }
         for (Bomb bomb : bombsList) {
             if(bomb.getHitBox().intersect(player.getHitBox())){
-                isRunning = false;
+                lost = true;
+                gameOver();
             }
             if(bomb.y > screenY)
                 toDeleteBombs.add(bomb);
         }
         goodItemList.removeAll(toDeleteItems);
         bombsList.removeAll(toDeleteBombs);
+    }
+
+    private void gameOver() {
+        isRunning = false;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(lost?"Game over!":"You won!");
+        builder.setMessage("Your score: " + score);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                gameViewListener.stopTheGame(score);
+            }
+        });
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                builder.create().show();
+            }
+        });
     }
 
     private void resolveEntityMovement() {
@@ -146,20 +210,20 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void spawnNewItem(long timeDiff) {
         lastCalledRun+=timeDiff;
-        if(lastCalledRun >= 1000){
+        if(lastCalledRun >= spawnTimerMs){
             lastCalledRun = 0;
 
-            int decision = random.nextInt(MAX_CHANCE) <= BOMB_CHANCE ? BOMB : GOOD_ITEM;
+            int decision = random.nextInt(MAX_CHANCE) <= bombChance ? BOMB : GOOD_ITEM;
 
             int itemWidth;
-            switch (decisions[decision]){
+            switch (DECISIONS[decision]){
                 case BOMB:
                     itemWidth = SkinHolderSingleton.getHolder().getGoodItemSkin(0).getWidth();
-                    bombsList.add(new Bomb(random.nextInt(screenX-itemWidth), -100));
+                    bombsList.add(new Bomb(random.nextInt(screenX-itemWidth), -100, baseEntityVelocityY));
                     break;
                 case GOOD_ITEM:
                     itemWidth = SkinHolderSingleton.getHolder().getGoodItemSkin(0).getWidth();
-                    goodItemList.add(new GoodItem(random.nextInt(screenX-itemWidth), -100));
+                    goodItemList.add(new GoodItem(random.nextInt(screenX-itemWidth), -100, baseEntityVelocityY));
                     break;
             }
         }
@@ -193,6 +257,10 @@ public class GameView extends SurfaceView implements Runnable {
                 break;
         }
         return true;
+    }
+
+    public interface GameViewListener{
+        void stopTheGame(int score);
     }
 
 

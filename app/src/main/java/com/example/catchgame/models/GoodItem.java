@@ -9,8 +9,8 @@ public class GoodItem extends Entity {
 
     private final int skinIndex;
 
-    public GoodItem(double x, double y) {
-        super(x, y, SkinHolderSingleton.getHolder().getGoodItemSkin(0).getWidth(), SkinHolderSingleton.getHolder().getGoodItemSkin(0).getHeight(), 0, 30);
+    public GoodItem(double x, double y, double velocityY) {
+        super(x, y, SkinHolderSingleton.getHolder().getGoodItemSkin(0).getWidth(), SkinHolderSingleton.getHolder().getGoodItemSkin(0).getHeight(), 0, velocityY);
         skinIndex = SkinHolderSingleton.getHolder().getRandomSkinIndex();
     }
 

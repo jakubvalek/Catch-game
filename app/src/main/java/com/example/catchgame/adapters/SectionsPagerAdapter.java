@@ -13,10 +13,6 @@ import com.example.catchgame.views.fragments.MainFragment;
 import com.example.catchgame.views.fragments.ScoresFragment;
 import com.example.catchgame.views.fragments.SettingsFragment;
 
-/**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
@@ -30,16 +26,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
         Fragment fragment = null;
         switch (position)
         {
             case 0:
-                fragment = new SettingsFragment();//PlaceholderFragment.newInstance(0);
+                fragment = new SettingsFragment();
                 break;
             case 1:
-                fragment = MainFragment.newInstance();//PlaceholderFragment.newInstance(1);
+                fragment = MainFragment.newInstance();
                 break;
             case 2:
                 fragment = ScoresFragment.newInstance();
@@ -58,7 +52,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 3;
     }
 }

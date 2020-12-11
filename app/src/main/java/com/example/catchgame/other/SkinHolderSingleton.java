@@ -59,8 +59,6 @@ public class SkinHolderSingleton {
         playerSkin = Bitmap.createScaledBitmap(playerSkin, playerSkin.getWidth() / 4, playerSkin.getHeight() / 4, false);
 
         bombSkin = BitmapFactory.decodeResource(resources, R.drawable.bomb);
-        //bombSkin.setWidth(goodItemSkins[0].getWidth() / 4);
-        //bombSkin.setHeight(goodItemSkins[0].getHeight() / 4);
         bombSkin = Bitmap.createScaledBitmap(bombSkin, goodItemSkins[0].getWidth(), goodItemSkins[0].getHeight(), false);
 
     }
