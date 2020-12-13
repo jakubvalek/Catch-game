@@ -3,11 +3,13 @@ package com.example.catchgame.views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -15,7 +17,9 @@ import android.view.SurfaceView;
 import com.example.catchgame.models.Bomb;
 import com.example.catchgame.models.GoodItem;
 import com.example.catchgame.models.Player;
+import com.example.catchgame.models.Score;
 import com.example.catchgame.other.SkinHolderSingleton;
+import com.example.catchgame.services.MusicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,7 @@ public class GameView extends SurfaceView implements Runnable {
     private final int BOMB = 1;
     private final int MAX_CHANCE = 100;
     private final int[] DECISIONS = new int[]{GOOD_ITEM, BOMB};
+    private final Context context;
 
     // Game area fields
     private Paint paint;
@@ -48,16 +53,16 @@ public class GameView extends SurfaceView implements Runnable {
     private Random random;
     private int bombChance;
     private int spawnTimerMs;
-    private int score = 0;
+    private Score score;
     private long lastCalledRun = 0;
     private double baseEntityVelocityY;
     private boolean lost = false;
     private GameViewListener gameViewListener;
 
 
-    public GameView(Context context, int screenX, int screenY, String difficulty, GameViewListener listener) {
-        super(context);
-
+    public GameView(Context context, int screenX, int screenY, Score score, GameViewListener listener, AttributeSet set) {
+        super(context, set);
+        this.context = context;
         if(listener == null){
             try {
                 throw new Exception("To use this view implement GameView.GameViewListener!");
@@ -69,6 +74,7 @@ public class GameView extends SurfaceView implements Runnable {
         gameViewListener = listener;
         this.screenX = screenX;
         this.screenY = screenY;
+        this.score = score;
 
         random = new Random();
         holder = getHolder();
@@ -76,7 +82,7 @@ public class GameView extends SurfaceView implements Runnable {
         goodItemList = new ArrayList<>();
         bombsList = new ArrayList<>();
 
-        switch (difficulty){
+        switch (score.difficulty){
             case "Insane":
                 bombChance = 70;
                 spawnTimerMs = 200;
@@ -138,7 +144,7 @@ public class GameView extends SurfaceView implements Runnable {
                 //canvas.drawRect(bomb.getHitBox(), paint);
                 canvas.drawBitmap(bomb.getSkin(), (float) (bomb.x), (float) (bomb.y), paint);
             }
-            canvas.drawText("Score: " + score, FONT_SIZE, FONT_SIZE, paint);
+            canvas.drawText("Score: " + score.score, FONT_SIZE, FONT_SIZE, paint);
 
             holder.unlockCanvasAndPost(canvas);
         }
@@ -154,7 +160,10 @@ public class GameView extends SurfaceView implements Runnable {
         List<Bomb> toDeleteBombs = new ArrayList<>();
         for (GoodItem item : goodItemList) {
             if(item.getHitBox().intersect(player.getHitBox())){
-                score++;
+                Intent playSound = new Intent();
+                playSound.setAction(MusicService.PLAY_CATCH_SOUND);
+                context.sendBroadcast(playSound);
+                score.score++;
                 toDeleteItems.add(item);
             }
             if(item.y > screenY)
@@ -162,6 +171,9 @@ public class GameView extends SurfaceView implements Runnable {
         }
         for (Bomb bomb : bombsList) {
             if(bomb.getHitBox().intersect(player.getHitBox())){
+                Intent playSound = new Intent();
+                playSound.setAction(MusicService.PLAY_EXPLOSION_SOUND);
+                context.sendBroadcast(playSound);
                 lost = true;
                 gameOver();
             }
@@ -176,13 +188,14 @@ public class GameView extends SurfaceView implements Runnable {
         isRunning = false;
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(lost?"Game over!":"You won!");
-        builder.setMessage("Your score: " + score);
+        builder.setMessage("Your score: " + score.score);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 gameViewListener.stopTheGame(score);
             }
         });
+        builder.setCancelable(false);
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
@@ -242,6 +255,10 @@ public class GameView extends SurfaceView implements Runnable {
     public void stop() {
         isRunning = false;
     }
+    public void finishGame() {
+        lost = false;
+        gameOver();
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -260,7 +277,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public interface GameViewListener{
-        void stopTheGame(int score);
+        void stopTheGame(Score score);
     }
 
 

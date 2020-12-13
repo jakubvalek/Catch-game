@@ -7,15 +7,15 @@
         <SeekBarPreference
             android:defaultValue="50"
             android:max="100"
-            app:key="musicVolume"
+            app:key="@string/musicVolume_key"
             app:min="0"
             app:showSeekBarValue="true"
-            app:title="@string/musicVolume_title" />
+            app:title="@string/musicVolume_title"/>
 
         <SeekBarPreference
             android:defaultValue="50"
             android:max="100"
-            app:key="effectsVolume"
+            app:key="@string/soundVolume_key"
             app:min="0"
             app:showSeekBarValue="true"
             app:title="@string/effectsVolume_title" />

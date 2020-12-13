@@ -4,6 +4,7 @@
     <string name="sp_score_normal">sp_score_normal</string>
     <string name="sp_score_hard">sp_score_hard</string>
     <string name="sp_score_insane">sp_score_insane</string>
+    <string name="sp_difficulty_spinner_index">sp_difficulty_spinner_index</string>
     <!-- Menu titles -->
     <string name="tab_text_settings">Settings</string>
     <string name="tab_text_menu">Main menu</string>
@@ -23,4 +24,10 @@
     <string name="text5_how_to_play">Thank you for playing Catch game!\nHave fun!</string>
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
+    <string name="top">Top</string>
+    <string name="history">History</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="score">Score</string>
+    <string name="musicVolume_key">musicVolume</string>
+    <string name="soundVolume_key">effectsVolume</string>
 </resources>

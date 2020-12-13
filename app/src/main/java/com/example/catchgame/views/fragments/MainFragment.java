@@ -63,8 +63,6 @@ public class MainFragment extends Fragment {
         textView_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent playGame = new Intent(getActivity().getApplicationContext(), GameActivity.class);
-                //startActivity(playGame);
                 PlayDialog playDialog = new PlayDialog();
                 playDialog.show(getActivity().getSupportFragmentManager(), null);
             }
