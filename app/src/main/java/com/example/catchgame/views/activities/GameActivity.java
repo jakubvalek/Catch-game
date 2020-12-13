@@ -73,7 +73,7 @@ public class GameActivity extends AppCompatActivity implements GameView.GameView
                         gameView.start();
                     }
                 });
-                builder.setNegativeButton("Save & quit", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         pauseDialogShown = false;
